@@ -15,19 +15,34 @@ class App extends React.Component {
   };
 
   handleChange = e => {
-    console.log("handle change");
+    this.setState({ item: e.target.value });
   };
   handleSubmit = e => {
-    console.log("handle submit");
+    e.preventDefault();
+    const newItem = { id: this.state.id, title: this.state.item };
+    const updatedItems = [...this.state.items, newItem];
+    this.setState({
+      items: updatedItems,
+      item: "",
+      id: uuid(),
+      editItem: false
+    });
   };
   clearList = () => {
-    console.log("clear list");
+    this.setState({ items: [] });
   };
   handleEdit = id => {
-    console.log("handle edit");
+    const filteredItems = this.state.items.filter(item => item.id !== id);
+    const selectedItem = this.state.items.find(item => item.id == id);
+    this.setState({
+      items: filteredItems,
+      item: selectedItem.title,
+      id: id
+    });
   };
   handleDelete = id => {
-    console.log("handle delete");
+    const filteredItems = this.state.items.filter(item => item.id !== id);
+    this.setState({ items: filteredItems });
   };
 
   render() {
@@ -36,19 +51,19 @@ class App extends React.Component {
         <div className="row">
           <div className="col-10 mx-auto col-md-8 mt-5">
             <h3 className="text-capitalize text-center">todo input</h3>
+            <TodoInput
+              item={this.state.item}
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}
+              editItem={this.state.editItem}
+            />
+            <TodoList
+              items={this.state.items}
+              handleDelete={this.handleDelete}
+              handleEdit={this.handleEdit}
+              clearList={this.clearList}
+            />
           </div>
-          <TodoInput
-            item={this.state.item}
-            handleChange={this.handleChange}
-            handleSubmit={this.handleSubmit}
-            editItem={this.state.editItem}
-          />
-          <TodoList
-            item={this.state.items}
-            handleDelete={this.handleDelete}
-            handleEdit={this.handleEdit}
-            clearList={this.clearList}
-          />
         </div>
       </div>
     );
