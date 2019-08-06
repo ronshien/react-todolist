@@ -25,7 +25,7 @@ class TodoInput extends React.Component {
             type="submit"
             className="btn btn-block btn-primary mt-3 text-uppercase"
           >
-            add item
+            save item
           </button>
         </form>
       </div>

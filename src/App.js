@@ -9,7 +9,7 @@ import TodoList from "./components/TodoList";
 class App extends React.Component {
   state = {
     items: [{ id: 1, title: "wake up" }, { id: 2, title: "have breakfast" }],
-    id: uuid(),
+    id: 0,
     item: "",
     editItem: false
   };
@@ -19,12 +19,27 @@ class App extends React.Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-    const newItem = { id: this.state.id, title: this.state.item };
-    const updatedItems = [...this.state.items, newItem];
+
+    const newItem = {
+      id: this.state.id === 0 ? uuid() : this.state.id,
+      title: this.state.item
+    };
+    let items = [];
+    if (this.state.id === 0) {
+      items = [...this.state.items, newItem];
+    } else {
+      items = this.state.items.map(item => {
+        if (item.id === this.state.id) {
+          item.title = this.state.item;
+        }
+        return item;
+      });
+    }
+
     this.setState({
-      items: updatedItems,
+      items: items,
       item: "",
-      id: uuid(),
+      id: 0,
       editItem: false
     });
   };
@@ -32,10 +47,10 @@ class App extends React.Component {
     this.setState({ items: [] });
   };
   handleEdit = id => {
-    const filteredItems = this.state.items.filter(item => item.id !== id);
+    //const filteredItems = this.state.items.filter(item => item.id !== id);
     const selectedItem = this.state.items.find(item => item.id == id);
     this.setState({
-      items: filteredItems,
+      // items: filteredItems,
       item: selectedItem.title,
       id: id
     });
